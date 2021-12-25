@@ -1,0 +1,19 @@
+main: com.placidshwift.hexgates.HexGates
+name: HexGates
+description: TBA
+author: PlacidShwift
+version: 1.0
+api-version: 1.18
+commands:
+  hg:
+    permission: "hg.default"
+    permission-message: "You do not have the required permission to do this"
+  permissions:
+    hg.default:
+      description: Enables access to hg commands
+      default: true
+    hg.give:
+      description: Gives a hex core
+      default: op
+
+
