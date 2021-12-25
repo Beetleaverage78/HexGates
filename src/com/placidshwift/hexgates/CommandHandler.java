@@ -47,6 +47,14 @@ public class CommandHandler implements CommandExecutor {
 					player.getInventory().addItem(hexCore);
 					player.sendMessage("Giving Hex Core to "+player.getName());
 					return true;
+				case "build":
+					World world = player.getWorld();
+					Location loc = player.getLocation();
+					
+					ItemStack bruh = new ItemStack(Material.DIAMOND);
+					world.dropItemNaturally(loc, bruh);
+					
+					
 			}
 			
 		}
