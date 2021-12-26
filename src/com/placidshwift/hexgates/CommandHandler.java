@@ -54,7 +54,6 @@ public class CommandHandler implements CommandExecutor {
 					World world = player.getWorld();
 					Location loc = player.getLocation();
 					
-<<<<<<< HEAD
 					// Foundation
 					for (int y = 0; y < 2; y++) {
 						for (int z = 0; z < 5; z++) {
@@ -223,11 +222,7 @@ public class CommandHandler implements CommandExecutor {
 					world.getBlockAt(loc.getBlockX()+1, loc.getBlockY()-3, loc.getBlockZ()-3).setType(Material.POLISHED_ANDESITE);  // RIGHT
 					world.getBlockAt(loc.getBlockX()-1, loc.getBlockY()-3, loc.getBlockZ()-4).setType(Material.POLISHED_ANDESITE);  // FRONT LEFT
 					world.getBlockAt(loc.getBlockX()+1, loc.getBlockY()-3, loc.getBlockZ()-4).setType(Material.POLISHED_ANDESITE);  // FRONT RIGHT
-=======
-					ItemStack bruh = new ItemStack(Material.DIAMOND);
-					world.dropItemNaturally(loc, bruh);
 
->>>>>>> dd5fb6620b5e0660270451b21c2bac61caf88842
 					
 					// North Layer 3 Stairs
 					world.getBlockAt(loc.getBlockX(), loc.getBlockY()-3, loc.getBlockZ()-4).setType(Material.STONE_BRICK_STAIRS);  // Front Midlee
