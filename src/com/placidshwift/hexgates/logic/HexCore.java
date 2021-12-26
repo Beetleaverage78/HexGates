@@ -44,21 +44,17 @@ public class HexCore {
 			}
 		}
 		
-
-		
-		// Hex Gate
-		world.getBlockAt(loc).setType(Material.RESPAWN_ANCHOR);
 		
 		// Layer 1
-		world.getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).setType(Material.CRYING_OBSIDIAN);
-		world.getBlockAt(loc.getBlockX()-1, loc.getBlockY()-1, loc.getBlockZ()).setType(Material.CRYING_OBSIDIAN);
-		world.getBlockAt(loc.getBlockX()+1, loc.getBlockY()-1, loc.getBlockZ()).setType(Material.CRYING_OBSIDIAN);
-		world.getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()-1).setType(Material.CRYING_OBSIDIAN);
-		world.getBlockAt(loc.getBlockX()-1, loc.getBlockY()-1, loc.getBlockZ()-1).setType(Material.CRYING_OBSIDIAN);
-		world.getBlockAt(loc.getBlockX()+1, loc.getBlockY()-1, loc.getBlockZ()-1).setType(Material.CRYING_OBSIDIAN);
-		world.getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()+1).setType(Material.CRYING_OBSIDIAN);
-		world.getBlockAt(loc.getBlockX()-1, loc.getBlockY()-1, loc.getBlockZ()+1).setType(Material.CRYING_OBSIDIAN);
-		world.getBlockAt(loc.getBlockX()+1, loc.getBlockY()-1, loc.getBlockZ()+1).setType(Material.CRYING_OBSIDIAN);
+		world.getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).setType(Material.IRON_BLOCK);
+		world.getBlockAt(loc.getBlockX()-1, loc.getBlockY()-1, loc.getBlockZ()).setType(Material.IRON_BLOCK);
+		world.getBlockAt(loc.getBlockX()+1, loc.getBlockY()-1, loc.getBlockZ()).setType(Material.IRON_BLOCK);
+		world.getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()-1).setType(Material.IRON_BLOCK);
+		world.getBlockAt(loc.getBlockX()-1, loc.getBlockY()-1, loc.getBlockZ()-1).setType(Material.IRON_BLOCK);
+		world.getBlockAt(loc.getBlockX()+1, loc.getBlockY()-1, loc.getBlockZ()-1).setType(Material.IRON_BLOCK);
+		world.getBlockAt(loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()+1).setType(Material.IRON_BLOCK);
+		world.getBlockAt(loc.getBlockX()-1, loc.getBlockY()-1, loc.getBlockZ()+1).setType(Material.IRON_BLOCK);
+		world.getBlockAt(loc.getBlockX()+1, loc.getBlockY()-1, loc.getBlockZ()+1).setType(Material.IRON_BLOCK);
 		
 		world.getBlockAt(loc.getBlockX()-2, loc.getBlockY()-1, loc.getBlockZ()-2).setType(Material.SEA_LANTERN);
 		world.getBlockAt(loc.getBlockX()+2, loc.getBlockY()-1, loc.getBlockZ()-2).setType(Material.SEA_LANTERN);
