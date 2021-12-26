@@ -15,5 +15,8 @@ commands:
     hg.give:
       description: Gives a hex core
       default: op
+    hg.build:
+      description: Builds a hexcore
+      default: op
 
 
