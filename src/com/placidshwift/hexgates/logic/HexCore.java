@@ -38,6 +38,10 @@ public class HexCore {
 		Location loc = data.getLocation();
 		World world = loc.getWorld();
 		
+		// Sets the boundary of the HexGate
+		data.setParameters(loc.getX()-4, loc.getX()+4, loc.getY()+5, loc.getY()-3, loc.getZ()-4, loc.getZ()+4);
+	
+		
 		// Foundation
 		for (int y = 0; y < 2; y++) {
 			for (int z = 0; z < 5; z++) {
@@ -68,10 +72,10 @@ public class HexCore {
 		world.getBlockAt(loc.getBlockX()-1, loc.getBlockY()-1, loc.getBlockZ()+1).setType(Material.IRON_BLOCK);
 		world.getBlockAt(loc.getBlockX()+1, loc.getBlockY()-1, loc.getBlockZ()+1).setType(Material.IRON_BLOCK);
 		
-		world.getBlockAt(loc.getBlockX()-2, loc.getBlockY()-1, loc.getBlockZ()-2).setType(Material.SEA_LANTERN);
-		world.getBlockAt(loc.getBlockX()+2, loc.getBlockY()-1, loc.getBlockZ()-2).setType(Material.SEA_LANTERN);
+		world.getBlockAt(loc.getBlockX()-2, loc.getBlockY()-1, loc.getBlockZ()-2).setType(Material.SEA_LANTERN); // X min corner & y Max corner
+		world.getBlockAt(loc.getBlockX()+2, loc.getBlockY()-1, loc.getBlockZ()-2).setType(Material.SEA_LANTERN); // X Max corner
 		world.getBlockAt(loc.getBlockX()-2, loc.getBlockY()-1, loc.getBlockZ()+2).setType(Material.SEA_LANTERN);
-		world.getBlockAt(loc.getBlockX()+2, loc.getBlockY()-1, loc.getBlockZ()+2).setType(Material.SEA_LANTERN);
+		world.getBlockAt(loc.getBlockX()+2, loc.getBlockY()-1, loc.getBlockZ()+2).setType(Material.SEA_LANTERN); 
 		
 		Directional direction;
 		Block block;

@@ -11,12 +11,17 @@ public class HexCoreData implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private boolean built;
 	private Map<String, Object> hexCoreLoc;
-	private double x,y,z;
+	private double xMin, xMax, yMin, yMax, zMin, zMax;
 	
 	public HexCoreData(Map<String, Object> hexCoreLoc) {
 		this.built = false;
 		this.hexCoreLoc = hexCoreLoc;
-		this.x =0;this.y=0;this.z=0;
+		this.xMin = 0;
+		this.xMax = 0;
+		this.yMin = 0;
+		this.yMax = 0;
+		this.zMin = 0;
+		this.zMax = 0;
 	}
 	
 	@Override
@@ -34,12 +39,29 @@ public class HexCoreData implements Serializable {
 	}
 	
 	public void setBuilt(boolean bool) {this.built = bool;}
-	public void setArea(double x, double y, double z) {this.x = x;this.y = y;this.z = z;}
 	public boolean isBuilt() {return this.built;}
 	public Location getLocation() {return Location.deserialize(hexCoreLoc);}
 	
-	public boolean isWithin(Location loc) {
+	public void setParameters(double xMin, double xMax, double yMin, double yMax, double zMin, double zMax) {
+		this.xMin = xMin;
+		this.xMax = xMax;
+		this.yMin = yMin;
+		this.yMax = yMax;
+		this.zMin = zMin;
+		this.zMax = zMax;
 		
-		return false;
+	}
+	
+	public boolean isWithin(Location loc) {
+		if (loc.getX() < xMin || loc.getX() > xMax) {
+			return false;
+		}
+		if (loc.getY() < yMin || loc.getY() > yMax) {
+			return false;
+		}
+		if (loc.getZ() < zMin || loc.getZ() > zMax) {
+			return false;
+		}
+		return true;
 	}
 }
