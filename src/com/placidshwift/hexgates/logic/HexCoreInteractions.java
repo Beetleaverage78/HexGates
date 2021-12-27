@@ -1,10 +1,9 @@
 package com.placidshwift.hexgates.logic;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -19,7 +18,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import com.placidshwift.hexgates.HexGates;
 import com.placidshwift.hexgates.libs.HexCoreData;
@@ -46,7 +44,19 @@ public class HexCoreInteractions implements Listener {
 		hexCoreData.set(hexCoreDataKey, new HexCoreDataType(), data);
 		state.update();
 		
-		event.getPlayer().sendMessage(HexGates.pluginFormat("HExCore Placed ur James - "));
+		// If HexCore exists in the global list - do not do anything
+		if (HexGates.hexCoreLocations.get(event.getBlockPlaced().getWorld()).contains(data)) return;
+		
+		// If not then add it to that list
+		ArrayList<HexCoreData> newEntry = HexGates.hexCoreLocations.get(event.getBlockPlaced().getWorld());
+		newEntry.add(data);
+		HexGates.hexCoreLocations.put(event.getBlockPlaced().getWorld(), newEntry);
+		gui.updateMainGUI(event.getBlockPlaced().getWorld());
+		
+		// Debug
+		event.getPlayer().sendMessage(HexGates.pluginFormat("HExCore Placed ur James - Total: "+
+				HexGates.hexCoreLocations.get(event.getBlockPlaced().getWorld()).size()
+				));
 	}
 	
 	@EventHandler
@@ -55,14 +65,27 @@ public class HexCoreInteractions implements Listener {
 		
 		// Check if player broke HexCore
 		TileState state = (TileState)event.getBlock().getState();
-		PersistentDataContainer hexCoreData = state.getPersistentDataContainer();
+		PersistentDataContainer blockData = state.getPersistentDataContainer();
 		
 		NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
-		if (!hexCoreData.has(isHexCoreKey, new HexCoreDataType())) return;
+		if (!blockData.has(isHexCoreKey, new HexCoreDataType())) return;
 		
+		// Remove it from the global list of HexCores
+		ArrayList<HexCoreData> newEntry = HexGates.hexCoreLocations.get(event.getBlock().getWorld());
+		newEntry.remove(blockData.get(isHexCoreKey, new HexCoreDataType()));
+		HexGates.hexCoreLocations.put(event.getBlock().getWorld(), newEntry);
+		blockData.remove(isHexCoreKey);
+		state.update();
+
 		event.setDropItems(false);
 		World world = event.getPlayer().getWorld();
 		world.dropItemNaturally(event.getBlock().getLocation(), HexCore.createHexCore());
+		gui.updateMainGUI(world);
+		
+		// Debug
+		event.getPlayer().sendMessage(HexGates.pluginFormat("HExCore Break - Total: "+
+				HexGates.hexCoreLocations.get(event.getBlock().getWorld()).size()
+				));
 	}
 	
 	@EventHandler
@@ -81,6 +104,7 @@ public class HexCoreInteractions implements Listener {
 		
 		event.setCancelled(true);
 		Player p = event.getPlayer();
+		gui.updateMainGUI(p.getWorld());
 		gui.setCurrentHexLoc(data);
 		if (!data.isBuilt()) {
 			p.openInventory(gui.getStartGUI());
@@ -93,7 +117,7 @@ public class HexCoreInteractions implements Listener {
 	// GUI Stuff
 	@EventHandler
 	public void onHexCoreGUIClick(InventoryClickEvent event) {
-		if (!event.getInventory().equals(gui.getStartGUI())) return;
+		if (!event.getInventory().equals(gui.getStartGUI()) && !event.getInventory().equals(gui.getMainGUI())) return;
 		if (event.getCurrentItem() == null) return;
 		if (event.getCurrentItem().getItemMeta() == null);
 		if (event.getCurrentItem().getItemMeta().getDisplayName() == null) return;
@@ -102,6 +126,8 @@ public class HexCoreInteractions implements Listener {
 
 		if (event.getInventory().equals(gui.getStartGUI())) {
 			gui.onStartGUIInteract(event);
+		} else if (event.getInventory().equals(gui.getMainGUI()) ) {
+			
 		}
 
 		

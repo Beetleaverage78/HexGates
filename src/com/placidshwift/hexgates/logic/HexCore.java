@@ -16,6 +16,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.placidshwift.hexgates.libs.HexCoreData;
+
 public class HexCore {
 	
 	public static ItemStack createHexCore() {
@@ -32,7 +34,8 @@ public class HexCore {
 		return hexCore;
 	}
 	
-	public static void buildHexGate(Location loc) {
+	public static HexCoreData buildHexGate(HexCoreData data) {
+		Location loc = data.getLocation();
 		World world = loc.getWorld();
 		
 		// Foundation
@@ -295,5 +298,6 @@ public class HexCore {
 		direction.setFacing(BlockFace.WEST);
 		block.setBlockData(direction);
 		
+		return data;
 	}
 }

@@ -26,6 +26,7 @@ public class HexCoreGUI {
 	
 	private Inventory startInv;
 	private Inventory mainInv;
+	private Inventory hexCoreInv;
 	
 	public HexCoreGUI() {createStartInv();createMainInv();}
 	
@@ -38,7 +39,7 @@ public class HexCoreGUI {
 		// Create HexCore Button
 		cMeta.setDisplayName(HexGates.format("&b&lCreate Hexgate"));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(HexGates.format("&7Ensure the Hexcore is 2 blocks high off the ground"));
+		lore.add(HexGates.format("&7Ensure the Hexcore is \n2 blocks high off the ground"));
 		cMeta.setLore(lore);
 		cMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		cBtn.setItemMeta(cMeta);
@@ -53,14 +54,17 @@ public class HexCoreGUI {
 		cBtn.setItemMeta(cMeta);
 		
 		startInv.setItem(26, cBtn);
-		
 	}
 	
 	private void createMainInv() {
-		mainInv = Bukkit.createInventory(null, 27, HexGates.format("&8&l[&8HexCore&8&l]"));
+		mainInv = Bukkit.createInventory(null, 54, HexGates.format("&8&l[&8HexCore&8&l]"));
 		
 		ItemStack cBtn = new ItemStack(Material.RED_WOOL);
 		ItemMeta cMeta = cBtn.getItemMeta();
+	}
+	
+	private void createHexCoreInv() {
+		
 	}
 	
 	public void onStartGUIInteract(InventoryClickEvent e) {
@@ -74,7 +78,7 @@ public class HexCoreGUI {
 				
 				if (!cont.has(isHexCoreKey, new HexCoreDataType())) return;
 				HexCoreData data = cont.get(isHexCoreKey, new HexCoreDataType());
-				HexCore.buildHexGate(data.getLocation());
+				data = HexCore.buildHexGate(data);
 				
 				// Grab the HexCore and Update its status to Built
 				TileState state = (TileState)p.getWorld().getBlockAt(data.getLocation()).getState();
@@ -93,7 +97,7 @@ public class HexCoreGUI {
 	}
 	
 	public void setCurrentHexLoc(HexCoreData data) {
-		ItemStack cBtn = new ItemStack(Material.BEACON);
+		ItemStack cBtn = new ItemStack(Material.ENCHANTED_BOOK);
 		ItemMeta cMeta = cBtn.getItemMeta();
 		
 		// Store Current HexCore Location in ItemStack
@@ -109,6 +113,31 @@ public class HexCoreGUI {
 		
 		startInv.setItem(4, cBtn);
 		mainInv.setItem(4, cBtn);
+	}
+	
+	public void updateMainGUI(World w) {
+		createMainInv();
+		ItemStack cBtn = new ItemStack(Material.BEACON);
+		ItemMeta cMeta = cBtn.getItemMeta();
+		ArrayList<String> lore;
+		
+		int count = 1;
+		int slot = 10;
+		for (HexCoreData hcd: HexGates.hexCoreLocations.get(w)) {
+			if (slot < 17) {
+				cMeta.setDisplayName(HexGates.format("&bHexGate #"+count));
+				lore = new ArrayList<String>();
+				lore.add(HexGates.format("&7Fuel Left | &c1/10"));
+				lore.add(HexGates.format("&7Status | &cDISABLED"));
+				Location loc = hcd.getLocation();
+				lore.add(HexGates.format("&7Location (xyz) | "+loc.getBlockX()+", "+loc.getBlockY()+", "+loc.getBlockZ()));
+				cMeta.setLore(lore);
+				cBtn.setItemMeta(cMeta);
+				
+				mainInv.setItem(slot, cBtn);
+				count++;slot++;
+			}
+		}
 	}
 	
 	public Inventory getStartGUI() {return this.startInv;}
