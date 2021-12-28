@@ -34,6 +34,17 @@ public class HexCoreInteractions implements Listener {
 	
 	@EventHandler
 	public void onHexCorePlace(BlockPlaceEvent event) {
+		for (Location hcd: HexGates.hexCoreLocations.get(event.getBlock().getWorld())) {
+			NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
+			TileState state = (TileState)event.getBlock().getWorld().getBlockAt(hcd).getState();
+			HexCoreData actualData = state.getPersistentDataContainer().get(isHexCoreKey, new HexCoreDataType());
+			if (actualData.isBuilt() && actualData.isWithin(event.getBlock().getLocation()) && event.getBlock().getType() != Material.BEACON) {
+				event.setCancelled(true);
+				event.getPlayer().sendMessage(HexGates.pluginFormat("&cThis block is part of the HexCore ..."));
+				return;
+			}
+		}
+		
 		if (event.getBlockPlaced().getType() != Material.BEACON) return;
 				
 		ItemStack item = event.getPlayer().getInventory().getItemInMainHand();

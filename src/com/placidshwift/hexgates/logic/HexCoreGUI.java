@@ -106,15 +106,16 @@ public class HexCoreGUI {
 	 * - i.e. the GUI that displays the HexCores/HexGates
 	 */
 	public void onMainGuiInteract(InventoryClickEvent e) {
+		int slot = e.getSlot();
 		Player p = (Player)e.getWhoClicked();
 		for (int i = 10;i < 17;i++) {
 			ItemStack core = mainInv.getItem(i);
-			
-			if (core != null && core.hasItemMeta() && core.getType() == Material.BEACON) {
+			if (i == slot && core != null && core.hasItemMeta() && core.getType() == Material.BEACON) {
 				NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
 				PersistentDataContainer itemData = core.getItemMeta().getPersistentDataContainer();
 				if (itemData.has(isHexCoreKey, new HexCoreDataType())) {
 					HexCoreData hexCoreData = itemData.get(isHexCoreKey, new HexCoreDataType());
+					
 					p.sendMessage(HexGates.pluginFormat("&7Teleporting to "+hexCoreData.getLocation().getBlockX()
 							+" "+hexCoreData.getLocation().getBlockY()
 							+" "+hexCoreData.getLocation().getBlockZ()));
@@ -161,15 +162,13 @@ public class HexCoreGUI {
 		int count = 1;
 		int slot = 10;
 		NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
-		
-		System.out.println("Updating");
 		for (Location loc: HexGates.hexCoreLocations.get(w)) {
 			ItemStack cBtn = new ItemStack(Material.BEACON);
 			ItemMeta cMeta = cBtn.getItemMeta();
 			
 			TileState state = (TileState)w.getBlockAt(loc).getState();
 			HexCoreData hcd = state.getPersistentDataContainer().get(isHexCoreKey, new HexCoreDataType());
-
+			
 			if (slot < 17 && !hcd.equals(currHexCore)) {
 				cMeta.setDisplayName(HexGates.format("&bHexGate #"+count));
 				ArrayList<String> lore = new ArrayList<String>();
