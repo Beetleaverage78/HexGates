@@ -39,7 +39,7 @@ public class HexCoreGUI {
 		// Create HexCore Button
 		cMeta.setDisplayName(HexGates.format("&b&lCreate Hexgate"));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(HexGates.format("&7Ensure the Hexcore is \n2 blocks high off the ground"));
+		lore.add(HexGates.format("&7Ensure the Hexcore is 2 blocks \n &7high off the ground"));
 		cMeta.setLore(lore);
 		cMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		cBtn.setItemMeta(cMeta);
@@ -67,6 +67,10 @@ public class HexCoreGUI {
 		
 	}
 	
+	/*
+	 * Handles Interaction on the StartGUI
+	 * - i.e. the GUI that builds the HexGate
+	 */
 	public void onStartGUIInteract(InventoryClickEvent e) {
 		Player p = (Player)e.getWhoClicked();
 		switch (e.getSlot()) {
@@ -90,11 +94,6 @@ public class HexCoreGUI {
 				hexCont.set(isHexCoreKey, new HexCoreDataType(), data);
 				state.update();
 				
-				// If not then add it to that list
-				ArrayList<HexCoreData> newEntry = HexGates.hexCoreLocations.get(p.getWorld());
-				newEntry.add(data);
-				HexGates.hexCoreLocations.put(p.getWorld(), newEntry);
-				
 				p.closeInventory();
 				
 			case 26:
@@ -102,16 +101,27 @@ public class HexCoreGUI {
 		}
 	}
 	
+	/*
+	 * Handles Interaction in the Main GUI
+	 * - i.e. the GUI that displays the HexCores/HexGates
+	 */
 	public void onMainGuiInteract(InventoryClickEvent e) {
 		Player p = (Player)e.getWhoClicked();
 		for (int i = 10;i < 17;i++) {
 			ItemStack core = mainInv.getItem(i);
-			if (core != null && core.getType() == Material.BEACON) {
+			
+			if (core != null && core.hasItemMeta() && core.getType() == Material.BEACON) {
 				NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
-				if (core.getItemMeta().getPersistentDataContainer().has(isHexCoreKey, new HexCoreDataType())) {
+				PersistentDataContainer itemData = core.getItemMeta().getPersistentDataContainer();
+				if (itemData.has(isHexCoreKey, new HexCoreDataType())) {
+					HexCoreData hexCoreData = itemData.get(isHexCoreKey, new HexCoreDataType());
+					p.sendMessage(HexGates.pluginFormat("&7Teleporting to "+hexCoreData.getLocation().getBlockX()
+							+" "+hexCoreData.getLocation().getBlockY()
+							+" "+hexCoreData.getLocation().getBlockZ()));
+					
 					ArrayList<Player> players = new ArrayList<Player>();
 					players.add(p);
-					HexCore.teleport(players, core.getItemMeta().getPersistentDataContainer().get(isHexCoreKey, new HexCoreDataType()));
+					HexCore.teleport(players, hexCoreData.getLocation());
 					return;
 				}
 			}
@@ -119,7 +129,10 @@ public class HexCoreGUI {
 	}
 	
 	
-	
+	/*
+	 * Sets the current HexCore/HexGate inside the GUI
+	 * - This is the HexCore/HexGate that is currently interacting with the player
+	 */
 	public void setCurrentHexLoc(HexCoreData data) {
 		ItemStack cBtn = new ItemStack(Material.ENCHANTED_BOOK);
 		ItemMeta cMeta = cBtn.getItemMeta();
@@ -139,26 +152,33 @@ public class HexCoreGUI {
 		mainInv.setItem(4, cBtn);
 	}
 	
+	/*
+	 * Update the MainGUI
+	 * - Updates & Displays all current HexCores & HexGates in the world
+	 */
 	public void updateMainGUI(World w, HexCoreData currHexCore) {
 		createMainInv();
-		ItemStack cBtn = new ItemStack(Material.BEACON);
-		ItemMeta cMeta = cBtn.getItemMeta();
-		ArrayList<String> lore;
-		
 		int count = 1;
 		int slot = 10;
-		for (HexCoreData hcd: HexGates.hexCoreLocations.get(w)) {
+		NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
+		
+		System.out.println("Updating");
+		for (Location loc: HexGates.hexCoreLocations.get(w)) {
+			ItemStack cBtn = new ItemStack(Material.BEACON);
+			ItemMeta cMeta = cBtn.getItemMeta();
+			
+			TileState state = (TileState)w.getBlockAt(loc).getState();
+			HexCoreData hcd = state.getPersistentDataContainer().get(isHexCoreKey, new HexCoreDataType());
+
 			if (slot < 17 && !hcd.equals(currHexCore)) {
-				NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
-				cMeta.getPersistentDataContainer().set(isHexCoreKey, new HexCoreDataType(), hcd);
-				
 				cMeta.setDisplayName(HexGates.format("&bHexGate #"+count));
-				lore = new ArrayList<String>();
+				ArrayList<String> lore = new ArrayList<String>();
 				lore.add(HexGates.format("&7Fuel Left | &c1/10"));
 				lore.add(HexGates.format("&7Status | &cDISABLED"));
-				Location loc = hcd.getLocation();
-				lore.add(HexGates.format("&7Location (xyz) | "+loc.getBlockX()+", "+loc.getBlockY()+", "+loc.getBlockZ()));
+				Location hexCoreLoc = hcd.getLocation();
+				lore.add(HexGates.format("&7Location (xyz) | "+hexCoreLoc.getBlockX()+", "+hexCoreLoc.getBlockY()+", "+hexCoreLoc.getBlockZ()));
 				cMeta.setLore(lore);
+				cMeta.getPersistentDataContainer().set(isHexCoreKey, new HexCoreDataType(), hcd);
 				cBtn.setItemMeta(cMeta);
 				
 				mainInv.setItem(slot, cBtn);

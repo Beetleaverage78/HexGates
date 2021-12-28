@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Beacon;
@@ -18,10 +19,12 @@ import com.placidshwift.hexgates.libs.HexCoreDataType;
 import com.placidshwift.hexgates.logic.HexCoreInteractions;
 
 
-
+/*
+ * Main Plugin Class
+ */
 public class HexGates extends JavaPlugin {
 
-	public static HashMap<World, ArrayList<HexCoreData>> hexCoreLocations;
+	public static HashMap<World, ArrayList<Location>> hexCoreLocations;
 	public static HexGates main;
 	
 	@Override
@@ -29,11 +32,11 @@ public class HexGates extends JavaPlugin {
 		main = this;
 		
 		// Find all Existing HexCores in a World
-		hexCoreLocations = new HashMap<World, ArrayList<HexCoreData>>();
-		ArrayList<HexCoreData> hexcores;
+		hexCoreLocations = new HashMap<World, ArrayList<Location>>();
+		ArrayList<Location> hexcores;
 		for (World w: this.getServer().getWorlds()) {
 			if (w.getEnvironment() == World.Environment.NORMAL) {
-				hexcores = new ArrayList<HexCoreData>();
+				hexcores = new ArrayList<Location>();
 				for (Chunk c: w.getLoadedChunks()) {
 					for (BlockState b: c.getTileEntities()) {
 						if (b instanceof Beacon) {
@@ -41,7 +44,7 @@ public class HexGates extends JavaPlugin {
 							PersistentDataContainer data = state.getPersistentDataContainer();
 							NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
 							if (data.has(isHexCoreKey, new HexCoreDataType())) {
-								hexcores.add(data.get(isHexCoreKey, new HexCoreDataType()));
+								hexcores.add(data.get(isHexCoreKey, new HexCoreDataType()).getLocation());
 							}
 						}
 					}
@@ -60,7 +63,7 @@ public class HexGates extends JavaPlugin {
 
 	}
 	
-
+	
 	public static String format(String msg) {return ChatColor.translateAlternateColorCodes('&', msg);}
 	public static String pluginFormat(String msg) {return ChatColor.translateAlternateColorCodes('&', "&8[&bHexGates&8] &7"+msg);}
 	

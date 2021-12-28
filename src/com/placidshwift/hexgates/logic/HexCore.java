@@ -19,6 +19,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.placidshwift.hexgates.libs.HexCoreData;
 
+/*
+ * Main HexGate Class
+ * - Defines the behaviour of a HexCore/HexGate
+ */
 public class HexCore {
 	
 	public static ItemStack createHexCore() {
@@ -35,10 +39,10 @@ public class HexCore {
 		return hexCore;
 	}
 	
-	public static void teleport(ArrayList<Player> players, HexCoreData hexCoreDest) {
-	    hexCoreDest.getLocation().add(0, 3, 0);
+	public static void teleport(ArrayList<Player> players, Location hexCoreDest) {
+		Location newLoc = hexCoreDest.clone();
 	    for (Player p: players) {
-	    	p.teleport(hexCoreDest.getLocation());
+	    	p.teleport(newLoc.add(0, 3, 0));
 	    }
 	}
 	 

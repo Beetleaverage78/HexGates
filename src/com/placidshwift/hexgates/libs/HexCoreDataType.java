@@ -12,7 +12,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 /*
  * Persistent HexCoreDataType
- * - Converts the HexCoreData class into persistentdata
+ * - Generalizes the PersistentDataType and Implements it to the HexCoreData class
  */
 public class HexCoreDataType implements PersistentDataType<byte[], HexCoreData> {
 

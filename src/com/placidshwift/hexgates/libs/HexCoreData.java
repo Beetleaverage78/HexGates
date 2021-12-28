@@ -5,7 +5,10 @@ import java.util.Map;
 
 import org.bukkit.Location;
 
-
+/*
+ * Represents the Data stored inside a HexCore/HexGate
+ * - This data is serializable so it can be stored as persistent data
+ */
 public class HexCoreData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -63,5 +66,12 @@ public class HexCoreData implements Serializable {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		if (this.getLocation() == null) return "HC - NULL";
+		return "HC - "
+				+ "LOC("+this.getLocation().getBlockX()+","+this.getLocation().getBlockY()+","+this.getLocation().getBlockZ()+") -";
 	}
 }
