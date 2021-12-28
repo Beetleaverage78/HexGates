@@ -12,6 +12,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Stairs;
 import org.bukkit.block.data.type.Stairs.Shape;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -34,12 +35,19 @@ public class HexCore {
 		return hexCore;
 	}
 	
+	public static void teleport(ArrayList<Player> players, HexCoreData hexCoreDest) {
+	    hexCoreDest.getLocation().add(0, 3, 0);
+	    for (Player p: players) {
+	    	p.teleport(hexCoreDest.getLocation());
+	    }
+	}
+	 
 	public static HexCoreData buildHexGate(HexCoreData data) {
 		Location loc = data.getLocation();
 		World world = loc.getWorld();
 		
 		// Sets the boundary of the HexGate
-		data.setParameters(loc.getX()-4, loc.getX()+4, loc.getY()+5, loc.getY()-3, loc.getZ()-4, loc.getZ()+4);
+		data.setParameters(loc.getX()-4, loc.getX()+4, loc.getY()-3, loc.getY()+5, loc.getZ()-4, loc.getZ()+4);
 	
 		
 		// Foundation

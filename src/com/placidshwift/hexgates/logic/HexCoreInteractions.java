@@ -51,7 +51,7 @@ public class HexCoreInteractions implements Listener {
 		ArrayList<HexCoreData> newEntry = HexGates.hexCoreLocations.get(event.getBlockPlaced().getWorld());
 		newEntry.add(data);
 		HexGates.hexCoreLocations.put(event.getBlockPlaced().getWorld(), newEntry);
-		gui.updateMainGUI(event.getBlockPlaced().getWorld());
+		gui.updateMainGUI(event.getBlockPlaced().getWorld(), data);
 		
 		// Debug
 		event.getPlayer().sendMessage(HexGates.pluginFormat("HExCore Placed ur James - Total: "+
@@ -61,6 +61,13 @@ public class HexCoreInteractions implements Listener {
 	
 	@EventHandler
 	public void onHexCoreBreak(BlockBreakEvent event) {
+		for (HexCoreData hcd: HexGates.hexCoreLocations.get(event.getBlock().getWorld())) {
+			System.out.println(hcd.isWithin(event.getBlock().getLocation()));
+			if (hcd.isBuilt() && hcd.isWithin(event.getBlock().getLocation()) && event.getBlock().getType() != Material.BEACON) {
+				event.setCancelled(true);
+				return;
+			}
+		}
 		if (event.getBlock().getType() != Material.BEACON) return;
 		
 		// Check if player broke HexCore
@@ -71,8 +78,9 @@ public class HexCoreInteractions implements Listener {
 		if (!blockData.has(isHexCoreKey, new HexCoreDataType())) return;
 		
 		// Remove it from the global list of HexCores
+		HexCoreData data = blockData.get(isHexCoreKey, new HexCoreDataType());
 		ArrayList<HexCoreData> newEntry = HexGates.hexCoreLocations.get(event.getBlock().getWorld());
-		newEntry.remove(blockData.get(isHexCoreKey, new HexCoreDataType()));
+		newEntry.remove(data);
 		HexGates.hexCoreLocations.put(event.getBlock().getWorld(), newEntry);
 		blockData.remove(isHexCoreKey);
 		state.update();
@@ -80,7 +88,7 @@ public class HexCoreInteractions implements Listener {
 		event.setDropItems(false);
 		World world = event.getPlayer().getWorld();
 		world.dropItemNaturally(event.getBlock().getLocation(), HexCore.createHexCore());
-		gui.updateMainGUI(world);
+		gui.updateMainGUI(world, data);
 		
 		// Debug
 		event.getPlayer().sendMessage(HexGates.pluginFormat("HExCore Break - Total: "+
@@ -104,7 +112,7 @@ public class HexCoreInteractions implements Listener {
 		
 		event.setCancelled(true);
 		Player p = event.getPlayer();
-		gui.updateMainGUI(p.getWorld());
+		gui.updateMainGUI(p.getWorld(), data);
 		gui.setCurrentHexLoc(data);
 		if (!data.isBuilt()) {
 			p.openInventory(gui.getStartGUI());
@@ -127,11 +135,8 @@ public class HexCoreInteractions implements Listener {
 		if (event.getInventory().equals(gui.getStartGUI())) {
 			gui.onStartGUIInteract(event);
 		} else if (event.getInventory().equals(gui.getMainGUI()) ) {
-			
+			gui.onMainGuiInteract(event);
 		}
-
-		
-		
 	}
 	
 	

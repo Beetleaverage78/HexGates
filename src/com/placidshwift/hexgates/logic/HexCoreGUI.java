@@ -89,12 +89,36 @@ public class HexCoreGUI {
 				data.setBuilt(true);
 				hexCont.set(isHexCoreKey, new HexCoreDataType(), data);
 				state.update();
+				
+				// If not then add it to that list
+				ArrayList<HexCoreData> newEntry = HexGates.hexCoreLocations.get(p.getWorld());
+				newEntry.add(data);
+				HexGates.hexCoreLocations.put(p.getWorld(), newEntry);
+				
 				p.closeInventory();
 				
 			case 26:
 				p.closeInventory();
 		}
 	}
+	
+	public void onMainGuiInteract(InventoryClickEvent e) {
+		Player p = (Player)e.getWhoClicked();
+		for (int i = 10;i < 17;i++) {
+			ItemStack core = mainInv.getItem(i);
+			if (core != null && core.getType() == Material.BEACON) {
+				NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
+				if (core.getItemMeta().getPersistentDataContainer().has(isHexCoreKey, new HexCoreDataType())) {
+					ArrayList<Player> players = new ArrayList<Player>();
+					players.add(p);
+					HexCore.teleport(players, core.getItemMeta().getPersistentDataContainer().get(isHexCoreKey, new HexCoreDataType()));
+					return;
+				}
+			}
+		}
+	}
+	
+	
 	
 	public void setCurrentHexLoc(HexCoreData data) {
 		ItemStack cBtn = new ItemStack(Material.ENCHANTED_BOOK);
@@ -115,7 +139,7 @@ public class HexCoreGUI {
 		mainInv.setItem(4, cBtn);
 	}
 	
-	public void updateMainGUI(World w) {
+	public void updateMainGUI(World w, HexCoreData currHexCore) {
 		createMainInv();
 		ItemStack cBtn = new ItemStack(Material.BEACON);
 		ItemMeta cMeta = cBtn.getItemMeta();
@@ -124,7 +148,10 @@ public class HexCoreGUI {
 		int count = 1;
 		int slot = 10;
 		for (HexCoreData hcd: HexGates.hexCoreLocations.get(w)) {
-			if (slot < 17) {
+			if (slot < 17 && !hcd.equals(currHexCore)) {
+				NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
+				cMeta.getPersistentDataContainer().set(isHexCoreKey, new HexCoreDataType(), hcd);
+				
 				cMeta.setDisplayName(HexGates.format("&bHexGate #"+count));
 				lore = new ArrayList<String>();
 				lore.add(HexGates.format("&7Fuel Left | &c1/10"));
