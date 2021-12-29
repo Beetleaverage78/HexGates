@@ -34,13 +34,14 @@ public class HexCoreInteractions implements Listener {
 	
 	@EventHandler
 	public void onHexCorePlace(BlockPlaceEvent event) {
+		// Check if Player is placing a block near a HexCore
 		for (Location hcd: HexGates.hexCoreLocations.get(event.getBlock().getWorld())) {
 			NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
 			TileState state = (TileState)event.getBlock().getWorld().getBlockAt(hcd).getState();
 			HexCoreData actualData = state.getPersistentDataContainer().get(isHexCoreKey, new HexCoreDataType());
 			if (actualData.isBuilt() && actualData.isWithin(event.getBlock().getLocation()) && event.getBlock().getType() != Material.BEACON) {
 				event.setCancelled(true);
-				event.getPlayer().sendMessage(HexGates.pluginFormat("&cThis block is part of the HexCore ..."));
+				event.getPlayer().sendMessage(HexGates.pluginFormat("&cThis block is near a HexCore ..."));
 				return;
 			}
 		}
@@ -75,13 +76,14 @@ public class HexCoreInteractions implements Listener {
 	
 	@EventHandler
 	public void onHexCoreBreak(BlockBreakEvent event) {
+		// Check if Player is breaking a block part of a HexCore
 		for (Location hcd: HexGates.hexCoreLocations.get(event.getBlock().getWorld())) {
 			NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
 			TileState state = (TileState)event.getBlock().getWorld().getBlockAt(hcd).getState();
 			HexCoreData actualData = state.getPersistentDataContainer().get(isHexCoreKey, new HexCoreDataType());
 			if (actualData.isBuilt() && actualData.isWithin(event.getBlock().getLocation()) && event.getBlock().getType() != Material.BEACON) {
 				event.setCancelled(true);
-				event.getPlayer().sendMessage(HexGates.pluginFormat("&cThis block is part of the HexCore ..."));
+				event.getPlayer().sendMessage(HexGates.pluginFormat("&cThis block is part of the HexCore"));
 				return;
 			}
 		}
@@ -145,7 +147,8 @@ public class HexCoreInteractions implements Listener {
 	// GUI Stuff
 	@EventHandler
 	public void onHexCoreGUIClick(InventoryClickEvent event) {
-		if (!event.getInventory().equals(gui.getStartGUI()) && !event.getInventory().equals(gui.getMainGUI())) return;
+		if (!event.getInventory().equals(gui.getStartGUI()) && !event.getInventory().equals(gui.getMainGUI()) 
+				&& !event.getInventory().equals(gui.getHexGateGUI())) return;
 		if (event.getCurrentItem() == null) return;
 		if (event.getCurrentItem().getItemMeta() == null);
 		if (event.getCurrentItem().getItemMeta().getDisplayName() == null) return;
@@ -156,6 +159,8 @@ public class HexCoreInteractions implements Listener {
 			gui.onStartGUIInteract(event);
 		} else if (event.getInventory().equals(gui.getMainGUI()) ) {
 			gui.onMainGuiInteract(event);
+		} else if (event.getInventory().equals(gui.getHexGateGUI())) {
+			gui.onHexCoreGUIInteract(event);
 		}
 	}
 	

@@ -65,6 +65,6 @@ public class HexGates extends JavaPlugin {
 	
 	
 	public static String format(String msg) {return ChatColor.translateAlternateColorCodes('&', msg);}
-	public static String pluginFormat(String msg) {return ChatColor.translateAlternateColorCodes('&', "&8[&bHexGates&8] &7"+msg);}
+	public static String pluginFormat(String msg) {return ChatColor.translateAlternateColorCodes('&', "&8[&bHG&8] &7"+msg);}
 	
 }

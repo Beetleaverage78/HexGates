@@ -39,7 +39,8 @@ public class HexCoreGUI {
 		// Create HexCore Button
 		cMeta.setDisplayName(HexGates.format("&b&lCreate Hexgate"));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(HexGates.format("&7Ensure the Hexcore is 2 blocks \n &7high off the ground"));
+		lore.add(HexGates.format("&7Ensure the Hexcore is 2 blocks"));
+		lore.add(HexGates.format("&7high off the ground"));
 		cMeta.setLore(lore);
 		cMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		cBtn.setItemMeta(cMeta);
@@ -59,11 +60,38 @@ public class HexCoreGUI {
 	private void createMainInv() {
 		mainInv = Bukkit.createInventory(null, 54, HexGates.format("&8&l[&8HexCore&8&l]"));
 		
-		ItemStack cBtn = new ItemStack(Material.RED_WOOL);
+		ItemStack cBtn = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
 		ItemMeta cMeta = cBtn.getItemMeta();
+		
 	}
 	
-	private void createHexCoreInv() {
+	private void createHexCoreInv(HexCoreData hexCore) {
+		hexCoreInv = Bukkit.createInventory(null, 27, HexGates.format("&8&l[&8HexCore&8&l]"));
+		
+		ItemStack cBtn = new ItemStack(Material.ENCHANTED_BOOK);
+		ItemMeta cMeta = cBtn.getItemMeta();
+		
+		// Store Current HexCoreData in ItemStack
+		NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
+		cMeta.getPersistentDataContainer().set(isHexCoreKey, new HexCoreDataType(), hexCore);
+		
+		cMeta.setDisplayName(HexGates.format("&b&lHexCore Info"));
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add(HexGates.format("&7Fuel Left - &c1/10"));
+		lore.add(HexGates.format("&7Status - &cDISABLED"));
+		cMeta.setLore(lore);
+		cBtn.setItemMeta(cMeta);
+		
+		hexCoreInv.setItem(4, cBtn);
+		
+		ItemStack btns = new ItemStack(Material.ENCHANTED_BOOK);
+		ItemMeta btnsmeta = cBtn.getItemMeta();
+		
+		// Teleport Single Button
+		
+		
+		// Teleport Multiple Button
+		
 		
 	}
 	
@@ -115,6 +143,7 @@ public class HexCoreGUI {
 				PersistentDataContainer itemData = core.getItemMeta().getPersistentDataContainer();
 				if (itemData.has(isHexCoreKey, new HexCoreDataType())) {
 					HexCoreData hexCoreData = itemData.get(isHexCoreKey, new HexCoreDataType());
+					createHexCoreInv(hexCoreData);
 					
 					p.sendMessage(HexGates.pluginFormat("&7Teleporting to "+hexCoreData.getLocation().getBlockX()
 							+" "+hexCoreData.getLocation().getBlockY()
@@ -129,6 +158,15 @@ public class HexCoreGUI {
 		}
 	}
 	
+	/*
+	 * Handles GUI Interaction with specific HexCores/HexGates
+	 */
+	public void onHexCoreGUIInteract(InventoryClickEvent e) {
+		Player p = (Player)e.getWhoClicked();
+		switch(e.getSlot()) {
+			case 14:
+		}
+	}
 	
 	/*
 	 * Sets the current HexCore/HexGate inside the GUI
@@ -188,4 +226,5 @@ public class HexCoreGUI {
 	
 	public Inventory getStartGUI() {return this.startInv;}
 	public Inventory getMainGUI() {return this.mainInv;}
+	public Inventory getHexGateGUI() {return this.hexCoreInv;}
 }

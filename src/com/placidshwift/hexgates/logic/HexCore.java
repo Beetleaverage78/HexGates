@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.placidshwift.hexgates.HexGates;
 import com.placidshwift.hexgates.libs.HexCoreData;
 
 /*
@@ -29,7 +30,7 @@ public class HexCore {
 		ItemStack hexCore = new ItemStack(Material.BEACON);
 		ItemMeta meta = hexCore.getItemMeta();
 		
-		meta.setDisplayName(ChatColor.AQUA+"HexCore");
+		meta.setDisplayName(HexGates.format("&b&lHexCore"));
 		ArrayList<String> itemDesc = new ArrayList<String>(
 				Arrays.asList(ChatColor.GRAY+"The foundation of all HexTech contraptions"));
 		meta.setLore(itemDesc);
@@ -42,7 +43,7 @@ public class HexCore {
 	public static void teleport(ArrayList<Player> players, Location hexCoreDest) {
 		Location newLoc = hexCoreDest.clone();
 	    for (Player p: players) {
-	    	p.teleport(newLoc.add(0, 3, 0));
+	    	p.teleport(newLoc.add(3, 3, 0));
 	    }
 	}
 	 

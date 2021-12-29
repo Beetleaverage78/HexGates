@@ -12,11 +12,13 @@ import org.bukkit.Location;
 public class HexCoreData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private String name;
 	private boolean built;
 	private Map<String, Object> hexCoreLoc;
 	private double xMin, xMax, yMin, yMax, zMin, zMax;
 	
 	public HexCoreData(Map<String, Object> hexCoreLoc) {
+		this.name = "HexCore";
 		this.built = false;
 		this.hexCoreLoc = hexCoreLoc;
 		this.xMin = 0;
