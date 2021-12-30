@@ -55,6 +55,19 @@ public class HexCoreGUI {
 		cBtn.setItemMeta(cMeta);
 		
 		startInv.setItem(26, cBtn);
+		
+		// Boundary
+		for (int i = 0; i < 27; i++) {
+			if (i != 4 && i != 13 && i != 26) {
+				cBtn.setType(Material.BLACK_STAINED_GLASS_PANE);
+				cMeta.setDisplayName(HexGates.format("&c&lURMUMGAY"));
+				lore.clear();
+				cMeta.setLore(lore);
+				cBtn.setItemMeta(cMeta);
+				
+				startInv.setItem(i, cBtn);
+			}
+		}
 	}
 	
 	private void createMainInv() {
@@ -62,6 +75,22 @@ public class HexCoreGUI {
 		
 		ItemStack cBtn = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
 		ItemMeta cMeta = cBtn.getItemMeta();
+		
+		ArrayList<String> lore = new ArrayList<String>();
+		
+		// Boundary
+		for (int i = 0; i < 54; i++) {
+			if (i < 9 || i % 9 == 0 || i % 9 == 8 || i > 45) {
+				cBtn.setType(Material.BLACK_STAINED_GLASS_PANE);
+				cMeta.setDisplayName(HexGates.format("&c&lURMUMGAY"));
+				lore.clear();
+				cMeta.setLore(lore);
+				cBtn.setItemMeta(cMeta);
+				
+				mainInv.setItem(i, cBtn);
+			}
+		}
+		
 		
 	}
 	
@@ -136,7 +165,7 @@ public class HexCoreGUI {
 	public void onMainGuiInteract(InventoryClickEvent e) {
 		int slot = e.getSlot();
 		Player p = (Player)e.getWhoClicked();
-		for (int i = 10;i < 17;i++) {
+		for (int i = 10;i < 45;i++) {
 			ItemStack core = mainInv.getItem(i);
 			if (i == slot && core != null && core.hasItemMeta() && core.getType() == Material.BEACON) {
 				NamespacedKey isHexCoreKey = new NamespacedKey(HexGates.main, "ishexcore");
@@ -207,19 +236,21 @@ public class HexCoreGUI {
 			TileState state = (TileState)w.getBlockAt(loc).getState();
 			HexCoreData hcd = state.getPersistentDataContainer().get(isHexCoreKey, new HexCoreDataType());
 			
-			if (slot < 17 && !hcd.equals(currHexCore)) {
-				cMeta.setDisplayName(HexGates.format("&bHexGate #"+count));
-				ArrayList<String> lore = new ArrayList<String>();
-				lore.add(HexGates.format("&7Fuel Left | &c1/10"));
-				lore.add(HexGates.format("&7Status | &cDISABLED"));
-				Location hexCoreLoc = hcd.getLocation();
-				lore.add(HexGates.format("&7Location (xyz) | "+hexCoreLoc.getBlockX()+", "+hexCoreLoc.getBlockY()+", "+hexCoreLoc.getBlockZ()));
-				cMeta.setLore(lore);
-				cMeta.getPersistentDataContainer().set(isHexCoreKey, new HexCoreDataType(), hcd);
-				cBtn.setItemMeta(cMeta);
-				
-				mainInv.setItem(slot, cBtn);
-				count++;slot++;
+			if (slot < 45 && !hcd.equals(currHexCore)) {
+				if (slot % 9 != 0 && slot % 9 != 8) {
+					cMeta.setDisplayName(HexGates.format("&bHexGate #"+count));
+					ArrayList<String> lore = new ArrayList<String>();
+					lore.add(HexGates.format("&7Fuel Left | &c1/10"));
+					lore.add(HexGates.format("&7Status | &cDISABLED"));
+					Location hexCoreLoc = hcd.getLocation();
+					lore.add(HexGates.format("&7Location (xyz) | "+hexCoreLoc.getBlockX()+", "+hexCoreLoc.getBlockY()+", "+hexCoreLoc.getBlockZ()));
+					cMeta.setLore(lore);
+					cMeta.getPersistentDataContainer().set(isHexCoreKey, new HexCoreDataType(), hcd);
+					cBtn.setItemMeta(cMeta);
+					count++;
+					mainInv.setItem(slot, cBtn);
+				}
+				slot++;
 			}
 		}
 	}
